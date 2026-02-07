@@ -757,17 +757,17 @@ stateDiagram-v2
     
     RelatorioDisponivel --> AuditPlace : Acessa Audit Place
     AuditPlace --> AnaliseIA : Executa análise com IA
-    AnaliseIA --> AuditPlace : Nova análise (prompts diferentes)
+    AnaliseIA --> AuditPlace : Nova análise com prompts diferentes
     
     AnaliseIA --> DueDiligenceConcluida : Análises satisfatórias
     DueDiligenceConcluida --> DecisaoProsseguir : Decide continuar compra
     DueDiligenceConcluida --> DecisaDeclinar : Decide não comprar
     
     DecisaoProsseguir --> NegociacaoContrato : Avança para contrato definitivo
-    DecisaDeclinar --> [*] : Encerra processo (NDA vigente)
+    DecisaDeclinar --> [*] : Encerra processo com NDA vigente
     
-    note right of DataRoomAcessado : Dados mascarados (LGPD)<br/>Títulos individuais visíveis
-    note right of AnaliseOnline : Bureaux + Regras internas<br/>PD/LGD/EAD calculados
+    note right of DataRoomAcessado : Dados mascarados LGPD<br/>Títulos individuais visíveis
+    note right of AnaliseOnline : Bureaux + Regras internas<br/>PD LGD EAD calculados
     note right of AuditPlace : Campos selecionáveis<br/>Prompt personalizado
     note right of DueDiligenceConcluida : Bureaux ✓ Regras ✓ IA ✓<br/>Base para decisão
 ```
@@ -778,21 +778,21 @@ stateDiagram-v2
 stateDiagram-v2
     [*] --> Solicitada : Cessionário solicita análise
     
-    Solicitada --> EmProcessamento : ≤ 100 títulos (online)
-    Solicitada --> Agendada : > 100 títulos
+    Solicitada --> EmProcessamento : Ate 100 titulos - online
+    Solicitada --> Agendada : Mais de 100 titulos
     
-    EmProcessamento --> ConsultandoBureaux : Início do processamento
+    EmProcessamento --> ConsultandoBureaux : Inicio do processamento
     ConsultandoBureaux --> AplicandoRegras : Bureaux consultados
     AplicandoRegras --> CalculandoIndicadores : Regras aplicadas
     CalculandoIndicadores --> Concluida : Indicadores calculados
     
-    EmProcessamento --> MigradaParaFila : Timeout (> 120s)
+    EmProcessamento --> MigradaParaFila : Timeout acima de 120s
     MigradaParaFila --> Agendada : Reregistrada na fila
     
-    Agendada --> ProcessandoNoturno : Cron job inicia (02:00 UTC)
+    Agendada --> ProcessandoNoturno : Cron job inicia as 02h00 UTC
     ProcessandoNoturno --> Concluida : Processamento OK
     ProcessandoNoturno --> Erro : Falha no processamento
-    Erro --> Agendada : Retry automático (máx. 3 tentativas)
+    Erro --> Agendada : Retry automatico - max 3 tentativas
     
     Concluida --> [*] : Relatório disponível
 ```
